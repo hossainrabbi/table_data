@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import DataTable from './components/DataTable';
+import Search from './components/Search';
+import data from './data/data';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+localStorage.setItem('data', JSON.stringify(data));
+
+const App = () => {
+    const [tableData, setTableData] = useState([]);
+
+    useEffect(() => {
+        const dataItems = JSON.parse(localStorage.getItem('data'));
+        setTableData(dataItems);
+    }, []);
+
+    return (
+        <div>
+            <Search />
+            <DataTable tableData={tableData} />
+        </div>
+    );
+};
 
 export default App;
