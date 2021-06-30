@@ -16,7 +16,7 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
 
     // Product price
     let price = 0;
-    if (selectedData?.minimum_rent_period <= 1) {
+    if (selectedData?.minimum_rent_period <= diffDate) {
         price = selectedData?.price * diffDate;
     } else {
         // 5% discount
@@ -43,7 +43,7 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                                     setSelectedItem(e.target.value)
                                 }
                             >
-                                <option>Select any Product</option>
+                                <option value="">Select any Product</option>
                                 {tableData.map(({ code, name }) => (
                                     <option key={code} value={name}>
                                         {name}
@@ -59,6 +59,14 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                                 type="date"
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
+                            {isNaN(price) ||
+                                (price <= 0 && (
+                                    <div>
+                                        <small className="text-danger">
+                                            Please Select a Valid Date
+                                        </small>
+                                    </div>
+                                ))}
                             {selectedData ? (
                                 <div className="text-left mt-3">
                                     <h6>Name: {selectedData?.name}</h6>
@@ -73,7 +81,17 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                                             </span>
                                         )}
                                     </span>
-                                    <span>Price: {selectedData?.price}</span>
+                                    <span className="d-flex align-items-center">
+                                        <span className="mr-5">
+                                            Price: {selectedData?.price}
+                                        </span>
+                                        {selectedData?.needing_repair && (
+                                            <span className="text-capitalize">
+                                                Mileage:{' '}
+                                                {`${selectedData?.needing_repair}`}
+                                            </span>
+                                        )}
+                                    </span>
                                 </div>
                             ) : (
                                 <div className="text-center mt-3">
@@ -97,6 +115,7 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                     <Button
                         variant="primary"
                         onClick={() => setConfirmBooking(true)}
+                        disabled={isNaN(price) || price <= 0}
                     >
                         Yes
                     </Button>

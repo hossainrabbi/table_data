@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import BookModal from './BookModal';
+import ReturnModal from './ReturnModal';
 
 const DataTable = ({ tableData }) => {
     const [showBookModal, setShowBookModal] = useState(false);
+    const [showReturnModal, setShowReturnModal] = useState(false);
 
     const handleBookModalClose = () => setShowBookModal(false);
     const handleBookModalShow = () => setShowBookModal(true);
+    const handleReturnModalClose = () => setShowReturnModal(false);
+    const handleReturnModalShow = () => setShowReturnModal(true);
 
     return (
         <Container>
@@ -50,12 +54,19 @@ const DataTable = ({ tableData }) => {
                 <Button variant="secondary" onClick={handleBookModalShow}>
                     Book
                 </Button>{' '}
-                <Button variant="secondary">Return</Button>
+                <Button variant="secondary" onClick={handleReturnModalShow}>
+                    Return
+                </Button>
             </div>
             <BookModal
                 showBookModal={showBookModal}
                 tableData={tableData}
                 handleBookModalClose={handleBookModalClose}
+            />
+            <ReturnModal
+                showReturnModal={showReturnModal}
+                tableData={tableData}
+                handleReturnModalClose={handleReturnModalClose}
             />
         </Container>
     );
