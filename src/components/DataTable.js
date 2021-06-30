@@ -4,20 +4,9 @@ import BookModal from './BookModal';
 
 const DataTable = ({ tableData }) => {
     const [showBookModal, setShowBookModal] = useState(false);
-    const [clickedItem, setClickedItem] = useState({});
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
 
     const handleBookModalClose = () => setShowBookModal(false);
     const handleBookModalShow = () => setShowBookModal(true);
-
-    const handleItemClick = (code) => {
-        setClickedItem(tableData.find((item) => item.code === code));
-    };
-
-    const diffDate =
-        Math.abs(new Date(endDate) - new Date(startDate)) /
-        (1000 * 60 * 60 * 24);
 
     return (
         <Container>
@@ -44,10 +33,7 @@ const DataTable = ({ tableData }) => {
                             mileage,
                         } = item;
                         return (
-                            <tr
-                                key={code}
-                                onClick={() => handleItemClick(code)}
-                            >
+                            <tr key={code}>
                                 <td>{index + 1}</td>
                                 <td>{name}</td>
                                 <td>{code}</td>
@@ -68,11 +54,8 @@ const DataTable = ({ tableData }) => {
             </div>
             <BookModal
                 showBookModal={showBookModal}
-                clickedItem={clickedItem}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
+                tableData={tableData}
                 handleBookModalClose={handleBookModalClose}
-                diffDate={diffDate}
             />
         </Container>
     );
