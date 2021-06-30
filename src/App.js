@@ -12,8 +12,10 @@ const App = () => {
     useEffect(() => {
         const dataItems = JSON.parse(localStorage.getItem('data'));
         setTableData(
-            dataItems.filter((item) =>
-                item.name.toLowerCase().includes(searchData)
+            dataItems.filter(
+                (item) =>
+                    item.name.toLowerCase().includes(searchData) ||
+                    item.name.toUpperCase().includes(searchData)
             )
         );
     }, [searchData]);

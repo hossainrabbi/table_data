@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
@@ -8,23 +7,28 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
     const [selectedItem, setSelectedItem] = useState({});
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
-    const [bookingData, setBookingData] = useState([]);
 
     const diffDate =
         Math.round(new Date(endDate) - new Date(startDate)) /
-            (1000 * 60 * 60 * 24) +
-        1;
+        (1000 * 60 * 60 * 24);
 
     const selectedData = tableData.find((item) => item.name === selectedItem);
 
-    const handleConfirm = () => {
-        setBookingData([...bookingData, selectedData]);
-        localStorage.setItem('bookingData', JSON.stringify(bookingData));
-    };
+    // Product price
+    let price = 0;
+    if (selectedData?.minimum_rent_period <= 1) {
+        price = selectedData?.price * diffDate;
+    } else {
+        // 5% discount
+        price =
+            selectedData?.price * diffDate -
+            (selectedData?.price * diffDate * 5) / 100;
+    }
 
-    useEffect(() => {
-        setBookingData(JSON.parse(localStorage.getItem('bookingData')));
-    }, []);
+    const handleConfirm = () => {
+        alert('Product Order Successfully!');
+        window.location.pathname = '/';
+    };
 
     return (
         <Modal show={showBookModal} onHide={handleBookModalClose}>
@@ -39,6 +43,7 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                                     setSelectedItem(e.target.value)
                                 }
                             >
+                                <option>Select any Product</option>
                                 {tableData.map(({ code, name }) => (
                                     <option key={code} value={name}>
                                         {name}
@@ -54,14 +59,32 @@ const BookModal = ({ showBookModal, handleBookModalClose, tableData }) => {
                                 type="date"
                                 onChange={(e) => setEndDate(e.target.value)}
                             />
+                            {selectedData ? (
+                                <div className="text-left mt-3">
+                                    <h6>Name: {selectedData?.name}</h6>
+                                    <span className="d-flex align-items-center">
+                                        <span className="mr-5">
+                                            Rental Period:
+                                            {selectedData?.minimum_rent_period}
+                                        </span>
+                                        {selectedData?.mileage && (
+                                            <span>
+                                                Mileage: {selectedData?.mileage}
+                                            </span>
+                                        )}
+                                    </span>
+                                    <span>Price: {selectedData?.price}</span>
+                                </div>
+                            ) : (
+                                <div className="text-center mt-3">
+                                    Please Select any Product
+                                </div>
+                            )}
                         </div>
                     </>
                 ) : (
                     <div className="text-center mt-4">
-                        <p>
-                            Your estimated price is $
-                            {selectedData?.price * diffDate}
-                        </p>
+                        <p>Your estimated price is ${price} </p>
                         <p>Do you want to procedure?</p>
                     </div>
                 )}
